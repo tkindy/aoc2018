@@ -13,6 +13,10 @@ repositories {
 
 dependencies {
     compile(kotlin("stdlib-jdk8"))
+    compile("com.google.guava:guava:27.0.1-jre")
+
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    testCompile("org.assertj:assertj-core:3.11.1")
 }
 
 tasks.withType<KotlinCompile> {
