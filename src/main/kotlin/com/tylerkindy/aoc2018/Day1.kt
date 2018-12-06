@@ -1,4 +1,4 @@
-package com.tylerkindy.aoc2018.day1
+package com.tylerkindy.aoc2018
 
 import com.google.common.io.Resources
 
