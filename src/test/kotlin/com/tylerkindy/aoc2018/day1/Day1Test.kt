@@ -9,7 +9,7 @@ class Day1Test {
     fun itParsesFrequencies() {
         val data = "+5\n+3\n-9\n+78549\n+4\n"
 
-        assertThat(parseFrequencies(data)).isEqualTo(listOf(5, 3, -9, 78549, 4))
+        assertThat(parseFrequencies(data)).isEqualTo(listOf<Freq>(5, 3, -9, 78549, 4))
     }
 
     @Test
@@ -34,5 +34,14 @@ class Day1Test {
         assertThat(findRepeat(listOf(1, -2, 3, 1))).isEqualTo(
             Repeat(2, setOf(0, 1, -1, 2, 3, 4))
         )
+    }
+
+    @Test
+    fun itGetsSumIndex() {
+        assertThat(sumIndex(0)).isEqualTo(50)
+        assertThat(sumIndex(14)).isEqualTo(50)
+        assertThat(sumIndex(-72)).isEqualTo(49)
+        assertThat(sumIndex(-78_402)).isEqualTo(10)
+        assertThat(sumIndex(64_032)).isEqualTo(82)
     }
 }
