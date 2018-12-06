@@ -1,7 +1,9 @@
+import com.github.rholder.gradle.task.OneJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.3.10"
+    id("com.github.onslip.gradle-one-jar") version "1.0.5"
 }
 
 group = "com.tylerkindy"
@@ -21,4 +23,8 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.create("oneJar", OneJar::class.java) {
+    mainClass = "com.tylerkindy.aoc2018.day1.Day1Kt"
 }
