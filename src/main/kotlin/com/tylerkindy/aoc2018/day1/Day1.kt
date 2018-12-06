@@ -8,7 +8,7 @@ fun main() {
 
     println("One-run sum: ${freqs.sum()}")
 
-    println("Repeat: ${findRepeat(freqs)}")
+    println("Repeat: ${findRepeat(freqs).sum}")
 }
 
 fun parseFrequencies(data: String): List<Int> {
@@ -17,17 +17,14 @@ fun parseFrequencies(data: String): List<Int> {
         .map(String::toInt)
 }
 
-fun findRepeat(freqs: List<Int>): Int {
+fun findRepeat(freqs: List<Int>): Repeat {
     var curSum = 0
     var pastSums = emptySet<Int>()
-
     var index = 0
 
     while (true) {
-        println(curSum)
-
         if (curSum in pastSums) {
-            return curSum
+            return Repeat(curSum, pastSums)
         }
 
         pastSums += curSum
@@ -35,3 +32,6 @@ fun findRepeat(freqs: List<Int>): Int {
         index = (index + 1) % freqs.size
     }
 }
+
+// For testing
+data class Repeat(val sum: Int, val pastSums: Set<Int>)
