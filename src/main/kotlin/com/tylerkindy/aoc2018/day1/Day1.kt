@@ -5,7 +5,6 @@ import com.google.common.io.Resources
 fun main() {
     val data = Resources.getResource("in/1.txt").readText()
     val freqs = parseFrequencies(data)
-    println(freqs)
 
     println("One-run sum: ${freqs.sum()}")
 
@@ -20,13 +19,11 @@ fun parseFrequencies(data: String): List<Int> {
 
 fun findRepeat(freqs: List<Int>): Int {
     var curSum = 0
-    var pastSums = setOf(curSum)
+    var pastSums = emptySet<Int>()
 
     var index = 0
 
     while (true) {
-        println("freq: ${freqs[index]}")
-        curSum += freqs[index]
         println(curSum)
 
         if (curSum in pastSums) {
@@ -34,6 +31,7 @@ fun findRepeat(freqs: List<Int>): Int {
         }
 
         pastSums += curSum
+        curSum += freqs[index]
         index = (index + 1) % freqs.size
     }
 }
