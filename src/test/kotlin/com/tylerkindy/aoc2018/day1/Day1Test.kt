@@ -16,4 +16,13 @@ class Day1Test {
     fun itParsesEmptyString() {
         assertThat(parseFrequencies("")).isEqualTo(emptyList<String>())
     }
+
+    @Test
+    fun itFindsTheRepeat() {
+        assertThat(findRepeat(listOf(1, -1))).isEqualTo(0)
+        assertThat(findRepeat(listOf(3, 3, 4, -2, -4))).isEqualTo(10)
+        assertThat(findRepeat(listOf(-6, 3, 8, 5, -6))).isEqualTo(5)
+        assertThat(findRepeat(listOf(7, 7, -2, -7, -4))).isEqualTo(14)
+        assertThat(findRepeat(listOf(1, -2, 3, 1))).isEqualTo(2)
+    }
 }
