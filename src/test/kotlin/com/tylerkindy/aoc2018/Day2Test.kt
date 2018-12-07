@@ -85,4 +85,26 @@ class Day2Test {
             )
         )
     }
+
+    @Test
+    fun itGetsSameLetters() {
+        val ids = listOf(
+            "abcde",
+            "fghij",
+            "klmno",
+            "pqrst",
+            "fguij",
+            "axcye",
+            "wvxyz"
+        )
+
+        assertThat(getSameLetters(ids)).isEqualTo("fgij")
+    }
+
+    @Test
+    fun itRemovesStringCharacters() {
+        assertThat("abcdef".removeAt(2)).isEqualTo("abdef")
+        assertThat("abcdef".removeAt(0)).isEqualTo("bcdef")
+        assertThat("abcdef".removeAt(5)).isEqualTo("abcde")
+    }
 }
