@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test
 
 class Day3Test {
 
-    private val claims = listOf(
-        Claim(1, 1, 3, 4, 4),
-        Claim(2, 3, 1, 4, 4),
-        Claim(3, 5, 5, 2, 2)
+    private val claims = mapOf(
+        1 to Claim(1, 1, 3, 4, 4),
+        2 to Claim(2, 3, 1, 4, 4),
+        3 to Claim(3, 5, 5, 2, 2)
     )
 
     @Test
@@ -18,17 +18,19 @@ class Day3Test {
                 "#3 @ 928,402: 16x24\n" +
                 "#243 @ 42,901: 500x10\n"
 
-        assertThat(parseClaims(data)).containsOnly(
-            Claim(1, 520, 746, 4, 20),
-            Claim(2, 274, 680, 19, 26),
-            Claim(3, 928, 402, 16, 24),
-            Claim(243, 42, 901, 500, 10)
+        assertThat(parseClaims(data)).isEqualTo(
+            mapOf(
+                1 to Claim(1, 520, 746, 4, 20),
+                2 to Claim(2, 274, 680, 19, 26),
+                3 to Claim(3, 928, 402, 16, 24),
+                243 to Claim(243, 42, 901, 500, 10)
+            )
         )
     }
 
     @Test
     fun itCountsOverlaps() {
-        assertThat(getOverlapCount(claims)).isEqualTo(4)
+        assertThat(getOverlapCount(produceMap(claims))).isEqualTo(4)
     }
 
     @Test
@@ -97,6 +99,6 @@ class Day3Test {
 
     @Test
     fun itFindsUniqueClaim() {
-        assertThat(findUniqueClaim(claims)).isEqualTo(3)
+        assertThat(findUniqueClaim(claims, produceMap(claims))).isEqualTo(3)
     }
 }
