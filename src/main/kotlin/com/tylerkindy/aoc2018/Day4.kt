@@ -12,6 +12,7 @@ fun main() {
     val timeline = parseInput(input)
 
     println("Strategy 1: ${getSleepiestProduct(timeline)}")
+    println("Strategy 2: ${strategy2(timeline)}")
 }
 
 fun parseInput(input: String): Timeline {
@@ -63,10 +64,11 @@ fun getSleepiestGuard(timeline: Timeline): GuardId {
 
 fun getSleepiestProduct(timeline: Timeline): Int {
     val sleepiestGuard = getSleepiestGuard(timeline)
-    return sleepiestGuard * getSleepiestMinute(timeline, sleepiestGuard)
+    val (sleepiestMinute, _) = getSleepiestMinute(timeline, sleepiestGuard)
+    return sleepiestGuard * sleepiestMinute
 }
 
-fun getSleepiestMinute(timeline: Timeline, guardId: GuardId): Int {
+fun getSleepiestMinute(timeline: Timeline, guardId: GuardId): Pair<Int, Int?> {
     return timeline.events
         .foldIndexed(emptyMap<Int, Int>()) { index, minuteMap, event ->
             if (event.guardId != guardId || event.eventType != EventType.SLEEP) {
@@ -76,7 +78,7 @@ fun getSleepiestMinute(timeline: Timeline, guardId: GuardId): Int {
             val wakeEvent = timeline.events[index + 1]
             addMinutes(minuteMap, event.dateTime, wakeEvent.dateTime)
         }
-        .maxBy(Map.Entry<Int, Int>::value)!!.key
+        .maxBy(Map.Entry<Int, Int>::value)?.toPair() ?: Pair(guardId, null)
 }
 
 fun addMinutes(minuteMap: Map<Int, Int>, sleepTime: LocalDateTime, wakeTime: LocalDateTime): Map<Int, Int> {
@@ -89,6 +91,21 @@ fun addMinutes(minuteMap: Map<Int, Int>, sleepTime: LocalDateTime, wakeTime: Loc
 
         map + (minuteBucket to prevCount + 1)
     }
+}
+
+fun strategy2(timeline: Timeline): Int {
+    return timeline.guards
+        .fold(Triple<GuardId?, Int?, Int?>(null, null, null)) { curChoice, guard ->
+            val (_, _, bestCount) = curChoice
+            val (sleepiestMinute, count) = getSleepiestMinute(timeline, guard)
+
+            if (bestCount == null || (count != null && count > bestCount)) {
+                Triple(guard, sleepiestMinute, count)
+            } else {
+                curChoice
+            }
+        }
+        .let { it.first!! * it.second!! }
 }
 
 data class Timeline(val guards: Set<GuardId>, val events: List<Event>)

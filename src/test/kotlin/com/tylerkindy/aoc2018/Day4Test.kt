@@ -13,11 +13,17 @@ class Day4Test {
             "[1518-11-02 00:40] falls asleep\n" +
             "[1518-11-02 00:50] wakes up\n" +
             "[1518-11-03 00:24] falls asleep\n" +
+            "[1518-11-04 00:46] wakes up\n" +
             "[1518-11-03 00:05] Guard #10 begins shift\n" +
             "[1518-11-03 00:29] wakes up\n" +
             "[1518-11-01 00:30] falls asleep\n" +
             "[1518-11-01 00:55] wakes up\n" +
-            "[1518-11-01 00:25] wakes up\n"
+            "[1518-11-01 00:25] wakes up\n" +
+            "[1518-11-04 00:02] Guard #99 begins shift\n" +
+            "[1518-11-04 00:36] falls asleep\n" +
+            "[1518-11-05 00:55] wakes up\n" +
+            "[1518-11-05 00:03] Guard #99 begins shift\n" +
+            "[1518-11-05 00:45] falls asleep\n"
 
     private lateinit var timeline: Timeline
 
@@ -85,6 +91,36 @@ class Day4Test {
                     Event(
                         LocalDateTime.of(1518, 11, 3, 0, 29),
                         10,
+                        EventType.WAKE
+                    ),
+                    Event(
+                        LocalDateTime.of(1518, 11, 4, 0, 2),
+                        99,
+                        EventType.BEGIN_SHIFT
+                    ),
+                    Event(
+                        LocalDateTime.of(1518, 11, 4, 0, 36),
+                        99,
+                        EventType.SLEEP
+                    ),
+                    Event(
+                        LocalDateTime.of(1518, 11, 4, 0, 46),
+                        99,
+                        EventType.WAKE
+                    ),
+                    Event(
+                        LocalDateTime.of(1518, 11, 5, 0, 3),
+                        99,
+                        EventType.BEGIN_SHIFT
+                    ),
+                    Event(
+                        LocalDateTime.of(1518, 11, 5, 0, 45),
+                        99,
+                        EventType.SLEEP
+                    ),
+                    Event(
+                        LocalDateTime.of(1518, 11, 5, 0, 55),
+                        99,
                         EventType.WAKE
                     )
                 )
@@ -156,7 +192,7 @@ class Day4Test {
 
     @Test
     fun itGetsSleepiestMinute() {
-        assertThat(getSleepiestMinute(timeline, 10)).isEqualTo(24)
+        assertThat(getSleepiestMinute(timeline, 10)).isEqualTo(Pair(24, 2))
     }
 
     @Test
@@ -196,5 +232,10 @@ class Day4Test {
                     50 to 1
                 )
             )
+    }
+
+    @Test
+    fun itPerformsStrategy2() {
+        assertThat(strategy2(timeline)).isEqualTo(4455)
     }
 }
