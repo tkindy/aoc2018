@@ -1,6 +1,7 @@
 package com.tylerkindy.aoc2018
 
 import com.google.common.io.Resources
+import java.time.Duration
 import java.time.LocalDateTime
 
 val EVENT_REGEX =
@@ -9,6 +10,8 @@ val EVENT_REGEX =
 fun main() {
     val input = Resources.getResource("in/4.txt").readText()
     val timeline = parseInput(input)
+
+    println("Strategy 1: ${getSleepiestProduct(timeline)}")
 }
 
 fun parseInput(input: String): Timeline {
@@ -40,6 +43,52 @@ fun parseEvent(line: String, lastGuardId: Int?): Event {
         guard,
         eventType
     )
+}
+
+fun getSleepiestGuard(timeline: Timeline): GuardId {
+    return timeline.events
+        .foldIndexed(emptyMap<GuardId, Duration>()) { index, sleepMap, event ->
+            if (event.eventType != EventType.SLEEP) {
+                return@foldIndexed sleepMap
+            }
+
+            val prevMinutes = sleepMap.getOrDefault(event.guardId, Duration.ZERO)
+            val wakeEvent = timeline.events[index + 1]
+            val timeAsleep = Duration.between(event.dateTime, wakeEvent.dateTime)
+
+            sleepMap + (event.guardId to prevMinutes + timeAsleep)
+        }
+        .maxBy(Map.Entry<GuardId, Duration>::value)!!.key
+}
+
+fun getSleepiestProduct(timeline: Timeline): Int {
+    val sleepiestGuard = getSleepiestGuard(timeline)
+    return sleepiestGuard * getSleepiestMinute(timeline, sleepiestGuard)
+}
+
+fun getSleepiestMinute(timeline: Timeline, guardId: GuardId): Int {
+    return timeline.events
+        .foldIndexed(emptyMap<Int, Int>()) { index, minuteMap, event ->
+            if (event.guardId != guardId || event.eventType != EventType.SLEEP) {
+                return@foldIndexed minuteMap
+            }
+
+            val wakeEvent = timeline.events[index + 1]
+            addMinutes(minuteMap, event.dateTime, wakeEvent.dateTime)
+        }
+        .maxBy(Map.Entry<Int, Int>::value)!!.key
+}
+
+fun addMinutes(minuteMap: Map<Int, Int>, sleepTime: LocalDateTime, wakeTime: LocalDateTime): Map<Int, Int> {
+    val timeAsleep = Duration.between(sleepTime, wakeTime)
+
+    return (0 until timeAsleep.toMinutes()).fold(minuteMap) { map, min ->
+        val curTime = sleepTime.plusMinutes(min)
+        val minuteBucket = curTime.minute
+        val prevCount = map.getOrDefault(minuteBucket, 0)
+
+        map + (minuteBucket to prevCount + 1)
+    }
 }
 
 data class Timeline(val guards: Set<GuardId>, val events: List<Event>)

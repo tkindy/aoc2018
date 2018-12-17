@@ -1,6 +1,7 @@
 package com.tylerkindy.aoc2018
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
@@ -18,9 +19,16 @@ class Day4Test {
             "[1518-11-01 00:55] wakes up\n" +
             "[1518-11-01 00:25] wakes up\n"
 
+    private lateinit var timeline: Timeline
+
+    @BeforeEach
+    fun setUp() {
+        timeline = parseInput(input)
+    }
+
     @Test
     fun itParsesInput() {
-        assertThat(parseInput(input)).isEqualTo(
+        assertThat(timeline).isEqualTo(
             Timeline(
                 setOf(10, 99),
                 listOf(
@@ -134,5 +142,59 @@ class Day4Test {
                 EventType.SLEEP
             )
         )
+    }
+
+    @Test
+    fun itGetsSleepiestProduct() {
+        assertThat(getSleepiestProduct(timeline)).isEqualTo(240)
+    }
+
+    @Test
+    fun itGetsSleepiestGuard() {
+        assertThat(getSleepiestGuard(timeline)).isEqualTo(10)
+    }
+
+    @Test
+    fun itGetsSleepiestMinute() {
+        assertThat(getSleepiestMinute(timeline, 10)).isEqualTo(24)
+    }
+
+    @Test
+    fun itAddsMinutes() {
+        val sleepTime = LocalDateTime.of(1518, 11, 5, 0, 45)
+        val wakeTime = LocalDateTime.of(1518, 11, 5, 0, 51)
+        assertThat(addMinutes(emptyMap(), sleepTime, wakeTime))
+            .isEqualTo(
+                mapOf(
+                    45 to 1,
+                    46 to 1,
+                    47 to 1,
+                    48 to 1,
+                    49 to 1,
+                    50 to 1
+                )
+            )
+    }
+
+    @Test
+    fun itAddsMinutesOnTopOfOldOnes() {
+        val sleepTime = LocalDateTime.of(1518, 11, 5, 0, 45)
+        val wakeTime = LocalDateTime.of(1518, 11, 5, 0, 51)
+        val minuteMap = mapOf(
+            43 to 4, 44 to 1, 45 to 3, 46 to 2
+        )
+        assertThat(addMinutes(minuteMap, sleepTime, wakeTime))
+            .isEqualTo(
+                mapOf(
+                    43 to 4,
+                    44 to 1,
+                    45 to 4,
+                    46 to 3,
+                    47 to 1,
+                    48 to 1,
+                    49 to 1,
+                    50 to 1
+                )
+            )
     }
 }
