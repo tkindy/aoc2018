@@ -14,6 +14,12 @@ class Day5Test {
     }
 
     @Test
+    fun itGetsImprovedPolymerLength() {
+        assertThat(getImprovedPolymerLength("dabAcCaCBAcCcaDA".toList()))
+            .isEqualTo(4)
+    }
+
+    @Test
     fun itReactsPolymer() {
         assertThat(reactPolymer("aA".toList()))
             .isEqualTo(emptyList<Char>())
@@ -52,7 +58,37 @@ class Day5Test {
         assertThat(unitsTrigger('a', 'B')).isFalse()
         assertThat(unitsTrigger('A', 'b')).isFalse()
         assertThat(unitsTrigger('A', 'B')).isFalse()
+    }
 
-        assertThat(unitsTrigger('c', 'C')).isTrue()
+    @Test
+    fun getUnits() {
+        assertThat(getUnits(emptyList())).isEqualTo(emptySet<Char>())
+        assertThat(getUnits("aA".toList())).isEqualTo(setOf('a'))
+        assertThat(getUnits("dabAcCaCBAcCcaDA".toList())).isEqualTo(
+            setOf('d', 'a', 'b', 'c')
+        )
+    }
+
+    @Test
+    fun itRemovesUnit() {
+        assertThat(removeUnit(emptyList(), 'a'))
+            .isEqualTo(emptyList<Char>())
+        assertThat(removeUnit("aA".toList(), 'a'))
+            .isEqualTo(emptyList<Char>())
+        assertThat(removeUnit("abBA".toList(), 'a'))
+            .isEqualTo("bB".toList())
+        assertThat(removeUnit("abAB".toList(), 'a'))
+            .isEqualTo("bB".toList())
+        assertThat(removeUnit("aabAAB".toList(), 'a'))
+            .isEqualTo("bB".toList())
+
+        assertThat(removeUnit("dabAcCaCBAcCcaDA".toList(), 'a'))
+            .isEqualTo("dbcCCBcCcD".toList())
+        assertThat(removeUnit("dabAcCaCBAcCcaDA".toList(), 'b'))
+            .isEqualTo("daAcCaCAcCcaDA".toList())
+        assertThat(removeUnit("dabAcCaCBAcCcaDA".toList(), 'c'))
+            .isEqualTo("dabAaBAaDA".toList())
+        assertThat(removeUnit("dabAcCaCBAcCcaDA".toList(), 'd'))
+            .isEqualTo("abAcCaCBAcCcaA".toList())
     }
 }

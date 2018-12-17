@@ -7,10 +7,24 @@ fun main() {
     val polymer = parsePolymer(input)
 
     println("Units remaining: ${reactPolymer(polymer).size}")
+    println("Improved polymer length: ${getImprovedPolymerLength(polymer)}")
 }
 
 fun parsePolymer(input: String): Polymer {
     return input.toList().filter(Char::isLetter)
+}
+
+fun getImprovedPolymerLength(polymer: Polymer): Int {
+    return getUnits(polymer).fold(0) { shortestLength, unit ->
+        val candidate = removeUnit(polymer, unit)
+        reactPolymer(candidate).size
+    }
+}
+
+fun getUnits(polymer: Polymer): Set<Char> {
+    return polymer.fold(emptySet()) { unitSet, unit ->
+        unitSet + unit.toLowerCase()
+    }
 }
 
 fun reactPolymer(polymer: Polymer): Polymer {
@@ -26,20 +40,33 @@ fun reactPolymer(polymer: Polymer): Polymer {
 }
 
 fun performPass(polymer: Polymer): Polymer {
-    return polymer.asSequence().windowed(2, partialWindows = true)
-        .fold(Pair(emptyList<Char>(), false)) { (newPolymer, leftConsumed), window ->
+    val removedIndices = mutableSetOf<Int>()
+
+    polymer.asSequence()
+        .windowed(2, partialWindows = true)
+        .forEachIndexed { index, window ->
             when {
-                leftConsumed -> Pair(newPolymer, false)
-                window.size < 2 -> Pair(newPolymer + window[0], false)
-                unitsTrigger(window[0], window[1]) -> Pair(newPolymer, true)
-                else -> Pair(newPolymer + window[0], false)
+                index in removedIndices -> return@forEachIndexed
+                window.size < 2 -> return@forEachIndexed
+                unitsTrigger(window[0], window[1]) -> {
+                    removedIndices += index
+                    removedIndices += index + 1
+                }
             }
-        }.first
+        }
+
+    return polymer.filterIndexed { index, _ ->
+        index !in removedIndices
+    }
 }
 
 fun unitsTrigger(left: Char, right: Char): Boolean {
     return left.isUpperCase() && left.toLowerCase() == right
             || left.isLowerCase() && left.toUpperCase() == right
+}
+
+fun removeUnit(polymer: Polymer, unit: Char): Polymer {
+    return polymer.filterNot { it.equals(unit, ignoreCase = true) }
 }
 
 typealias Polymer = List<Char>
