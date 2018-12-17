@@ -1,6 +1,7 @@
 package com.tylerkindy.aoc2018
 
 import com.google.common.io.Resources
+import kotlin.math.min
 
 fun main() {
     val input = Resources.getResource("in/5.txt").readText()
@@ -15,9 +16,9 @@ fun parsePolymer(input: String): Polymer {
 }
 
 fun getImprovedPolymerLength(polymer: Polymer): Int {
-    return getUnits(polymer).fold(0) { shortestLength, unit ->
+    return getUnits(polymer).fold(polymer.size) { shortestLength, unit ->
         val candidate = removeUnit(polymer, unit)
-        reactPolymer(candidate).size
+        min(shortestLength, reactPolymer(candidate).size)
     }
 }
 

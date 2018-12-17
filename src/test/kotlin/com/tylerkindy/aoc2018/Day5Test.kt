@@ -17,6 +17,8 @@ class Day5Test {
     fun itGetsImprovedPolymerLength() {
         assertThat(getImprovedPolymerLength("dabAcCaCBAcCcaDA".toList()))
             .isEqualTo(4)
+        assertThat(getImprovedPolymerLength("acAcAcaCDd".toList()))
+            .isEqualTo(0)
     }
 
     @Test
