@@ -208,4 +208,33 @@ class Day6Test {
         assertThat(isAtEdge(Pair(3, 4), Bounds(0, 7, 7, 0))).isFalse()
         assertThat(isAtEdge(Pair(3, 4), Bounds(4, 7, 7, 0))).isTrue()
     }
+
+    @Test
+    fun itGetsCloseRegionSize() {
+        assertThat(getCloseRegionSize(mapData.map, mapData.bounds, 32)).isEqualTo(16)
+    }
+
+    @Test
+    fun itGetsTotalDist() {
+        assertThat(getTotalDist(mapData.map, Pair(4, 3))).isEqualTo(30)
+    }
+
+    @Test
+    fun itCalculatesDistance() {
+        assertThat(dist(Pair(3, 4), Pair(7, 12))).isEqualTo(12)
+        assertThat(dist(Pair(6, 1), Pair(6, 1))).isEqualTo(0)
+    }
+
+    @Test
+    fun itGetsAllPoints() {
+        assertThat(allPoints(Bounds(2, 4, 5, 2)))
+            .isEqualTo(
+                setOf(
+                    Pair(2, 2), Pair(3, 2), Pair(4, 2),
+                    Pair(2, 3), Pair(3, 3), Pair(4, 3),
+                    Pair(2, 4), Pair(3, 4), Pair(4, 4),
+                    Pair(2, 5), Pair(3, 5), Pair(4, 5)
+                )
+            )
+    }
 }

@@ -1,14 +1,18 @@
 package com.tylerkindy.aoc2018
 
 import com.google.common.io.Resources
+import kotlin.math.abs
 
 val COORD_REGEX = Regex("^(\\d+), (\\d+)$")
 
 fun main() {
     val input = Resources.getResource("in/6.txt").readText()
     val mapData = parseMap(input)
+    val originalMap = mutableMapOf<Coord, ID>()
+    originalMap += mapData.map
 
     println("Largest finite area: ${largestFiniteArea(mapData)}")
+    println("Close region size: ${getCloseRegionSize(originalMap, mapData.bounds, 10_000)}")
 }
 
 fun parseMap(input: String): MapData {
@@ -105,6 +109,34 @@ fun isAtEdge(coord: Coord, bounds: Bounds): Boolean {
     val (t, r, b, l) = bounds
 
     return x == r || x == l || y == t || y == b
+}
+
+fun getCloseRegionSize(map: CoordMap, bounds: Bounds, maxDist: Int): Int {
+    return allPoints(bounds).fold(0) { size, point ->
+        if (getTotalDist(map, point) < maxDist) {
+            size + 1
+        } else {
+            size
+        }
+    }
+}
+
+fun getTotalDist(map: CoordMap, coord: Coord): Int {
+    return map.keys.fold(0) { distance, point ->
+        distance + dist(coord, point)
+    }
+}
+
+fun dist(c1: Coord, c2: Coord): Int {
+    return abs(c1.first - c2.first) + abs(c1.second - c2.second)
+}
+
+fun allPoints(bounds: Bounds): Set<Coord> {
+    return (bounds.l..bounds.r).flatMap { x ->
+        (bounds.t..bounds.b).map { y ->
+            Pair(x, y)
+        }
+    }.toSet()
 }
 
 data class MapData(
