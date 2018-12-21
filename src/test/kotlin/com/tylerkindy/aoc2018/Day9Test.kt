@@ -13,22 +13,16 @@ class Day9Test {
     @BeforeEach
     fun setUp() {
         game0 = MarbleGame(
-            mutableListOf(0),
-            0,
-            mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
-            0
+            ListNode.from(listOf(0)),
+            ListNode.from(listOf<Long>(0, 0, 0, 0, 0, 0, 0, 0, 0))
         )
         game1 = MarbleGame(
-            mutableListOf(0, 1),
-            1,
-            game0.scores,
-            1
+            ListNode.from(listOf(1, 0)),
+            game0.scores
         )
         game2 = MarbleGame(
-            mutableListOf(0, 2, 1),
-            1,
-            game0.scores,
-            2
+            ListNode.from(listOf(2, 1, 0)),
+            game1.scores
         )
     }
 
@@ -63,9 +57,7 @@ class Day9Test {
     }
 
     @Test
-    fun itGetsNextMarbleIndex() {
-        assertThat(getNextMarbleIndex(game0.circle, game0.curMarble)).isEqualTo(1)
-        assertThat(getNextMarbleIndex(game1.circle, game1.curMarble)).isEqualTo(1)
-        assertThat(getNextMarbleIndex(game2.circle, game2.curMarble)).isEqualTo(3)
+    fun itCreatesListNodes() {
+        assertThat(ListNode.from(listOf(0, 1, 2)).toList()).isEqualTo(listOf(0, 1, 2))
     }
 }
