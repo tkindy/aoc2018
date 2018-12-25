@@ -21,14 +21,9 @@ fun parseMarbleParams(input: String): MarbleParams {
 }
 
 fun getHighScore(numPlayers: Int, lastMarble: Marble): Score {
-    val onePercent = lastMarble / 100
     val game = createNewGame(numPlayers)
 
     for (marble in 1..lastMarble) {
-        if (onePercent > 0 && marble % onePercent == 0) {
-            println(marble / onePercent)
-        }
-
         takeTurn(game, marble)
     }
 
